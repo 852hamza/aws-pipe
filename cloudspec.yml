@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+  pre_build:
+    commands:
+      - echo "Installing AWS CLI"
+      - pip install awscli
+      - echo "Installing SSH client"
+      - apt-get update && apt-get install -y openssh-client
+  build:
+    commands:
+      - echo "Fetching secret from Secrets Manager"
+      - export SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id your-secret-id --query SecretString --output text)
+      - echo "Fetching EC2 instance ID from Systems Manager"
+      - export INSTANCE_ID=$(aws ssm get-parameter --name /your/ssm/parameter --query Parameter.Value --output text)
+      - echo "SSH into EC2 instance and run your script"
+      - ssh -i your-key.pem ec2-user@${INSTANCE_ID} "echo $SECRET_VALUE | your-script.sh"
