@@ -1,5 +1,5 @@
-version: 1.0
-os: ubuntu
+version: 0.0
+os: linux
 files:
   - source: /
     destination: /home/root/python3-aws-codedeploy-pipeline
